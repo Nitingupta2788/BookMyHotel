@@ -1,17 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+//import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+// import Home from './pages/Home/Home';
+// import List from './pages/List/List';
+// import Hotel from './pages/Hotel/Hotel';
+// import { SearchContextProvider } from './context/SearchContext';
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(
+//   <SearchContextProvider>
+//     <Router>
+//       <Routes>
+//         <Route path='/' element={<Home />} />
+//         <Route path='/hotel' element={<List />} />
+//         <Route path='hotel/:id' element={<Hotel />} />
+//       </Routes>
+//     </Router>
+//   </SearchContextProvider>
+// );
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+import { SearchContextProvider } from "./context/SearchContext";
+import { AuthContextProvider } from "./context/AuthContext";
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+  <AuthContextProvider>
+    <SearchContextProvider>
+      <App />
+    </SearchContextProvider>
+  </AuthContextProvider>
+
+);
