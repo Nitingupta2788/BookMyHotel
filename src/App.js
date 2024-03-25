@@ -2,6 +2,7 @@ import Home from './pages/Home/Home';
 import List from './pages/List/List';
 import Hotel from './pages/Hotel/Hotel';
 import Login from './pages/Login/Login';
+import { PaymentResult } from './components/paymentResult';
 import {
   BrowserRouter,
   Routes,
@@ -29,6 +30,7 @@ function App() {
         <Route path="/hotel" element={<List />} />
         <Route path="/hotel/:id" element={<Hotel />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/paymentResult" element={<PaymentResult />} />
       </Routes>
     </BrowserRouter>
   );

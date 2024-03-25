@@ -1,11 +1,13 @@
 import useFetch from "../../hooks/fetchData"
 import './Rooms.css'
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { SearchContext } from "../../context/SearchContext"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import StripeCheckout from 'react-stripe-checkout';
+
 const Rooms = ({ setOpen, hotelid }) => {
     const navigate = useNavigate();
     const [selectedRooms, setSelectedRooms] = useState([])
@@ -13,8 +15,38 @@ const Rooms = ({ setOpen, hotelid }) => {
     const { data, error, loading } = useFetch(`http://localhost:3000/rooms/${hotelid}`)
     const start = new Date(date[0].startDate).getTime()
     const end = new Date(date[0].endDate).getTime()
+    const stripeKey = 'pk_test_51OlXHOKQanLvksGLVDrJ48d0KCuchgmvLNpy3P9VR0c52eMFIt89MLgyh9hJ6Ut3wcwIYkdFkJa0TPWBxb4xcna400PjsV6TP2'
+    const [stripeToken, setStripeToken] = useState(null)
+    // const headers = {
+    //     'Authorization': 'Bearer sk_test_51OlXHOKQanLvksGLVRktqZO9D4JbnqAx3T7aOhxGTsm19UhcTH7EPOHNuj39LnaaYs8HldTeBbHFHf2TH8bhdY7F00bjRtceUy',
+    //     'Content-Type': 'application/json',
+    // };
 
+    const onToken = async (token) => {
+        setStripeToken(token)
 
+    }
+    useEffect(() => {
+
+        const makePaymentRequest = async () => {
+            const res = ''
+            try {
+                res = await axios.post(`http://localhost:3000/checkout/payment`, {
+                    tokenId: stripeToken.id,
+                    amount: 2000
+                }
+
+                )
+            } catch (err) {
+                console.log(err)
+            }
+            //history.push({ path: '../paymentResult', data: resp.data })
+            console.log(res)
+            navigate("../paymentResult", { state: res.data });
+        }
+
+        stripeToken && makePaymentRequest()
+    }, [stripeToken])
 
     const getDateRange = (startDate, endDate) => {
         let currentDate = new Date(startDate)
@@ -86,9 +118,21 @@ const Rooms = ({ setOpen, hotelid }) => {
                                 </div>
                             ))}
                         </div>
-                        <button onClick={handleClick} className="rButton">
-                            Reserve Now!
-                        </button>
+
+                        {stripeToken ? (<span>Processing. Please wait</span>) :
+                            <StripeCheckout name="Book My Hotel" billingAddress shippingAddress
+                                description="your total amount is"
+                                amount={2000}
+                                stripeKey={stripeKey}
+                                token={onToken}
+
+                            >
+                                <button className="rButton">
+                                    {/* <button onClick={handleClick} className="rButton"> */}
+                                    Reserve Now!
+                                </button>
+                            </StripeCheckout>
+                        }
                     </div>
                 ))
             }
@@ -96,7 +140,7 @@ const Rooms = ({ setOpen, hotelid }) => {
         </div>
 
 
-    </div>
+    </div >
 
 }
 
