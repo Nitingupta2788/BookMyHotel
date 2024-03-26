@@ -4,7 +4,7 @@ import { useState, useContext } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 const Login = () => {
-    const url = 'http://localhost:3000/auth/login'
+    const url = 'http://100.24.7.44:3000/auth/login'
     const [credential, setCredential] = useState({ userName: undefined, password: undefined })
 
     const { loading, error, dispatch } = useContext(AuthContext)
